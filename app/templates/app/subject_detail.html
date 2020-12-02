@@ -1,0 +1,50 @@
+{% extends 'app/base.html' %}
+
+
+{% block content %}
+{% load dict_tag %}
+<header>
+{% if done %}
+<a href="{% url 'app:edit' comment_pk=comment_pk %}">コメントを編集する</a>
+{% else %}
+<a href="{% url 'app:comment_add' subject_pk=subject.pk %}">コメントを投稿する</a>
+{% endif %}
+</header>
+
+{% if subject.college is not None %}
+<h3>専門科目</h3>
+<p>{{ subject.college }}  |  {{ subject.school }}</p>
+{% else %}
+<h3>一般教養科目</h3>
+{% endif %}
+<p>科目:{{ subject.name }}</p>
+<p>担当教官:{{ subject.professor }}</p>
+<div class="comment">
+<p>コメント</p>
+{% if comments.count != 0 %}
+    {% for comment in comments %}
+        <p>{{ comment.user.username }}さんのコメント  {{ comment.created_at }}</p>
+        <p>{{ comment.text }}</p>
+        {{ comment.like.num }}いいね
+        {% if request.user.is_authenticated %}
+                {% if  request.user not in comment.like.user.all %}
+                    <form action="{% url 'app:push_like' subject_pk=subject.pk like_pk=comment.like.pk do='like' %}" method="post">{% csrf_token %}
+                        <button type="submit" value="{{ comment.pk }}"><i class="fas fa-lg fa-heart like-red">いいねする</i></button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'app:push_like' subject_pk=subject.pk like_pk=comment.like.pk do='unlike' %}" method="post">{% csrf_token %}
+                        <button type="submit" value="{{ comment.pk }}"><i class="fas fa-lg fa-heart">いいねをやめる</i></button>
+                    </form>
+                {% endif %}
+        {% endif %}
+        <br>
+    {% endfor %}
+{% else %}
+    <p>まだコメントはありません。</p>
+    {% if request.user.is_authenticated %}
+    <p>{{ user.username }}さん、{{ subject.name　}}の講義についてご存知なら書き込んでみましょう！！</p>
+{% endif %}
+
+{% endif %}
+</div>
+{% endblock %}

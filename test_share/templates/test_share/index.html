@@ -1,0 +1,31 @@
+{% extends 'test_share/base.html' %}
+
+{% block content %}
+
+<div class="iberalarts">
+<h3>一般教養科目</h3>
+{% for subject in subjects %}
+　　 {% if subject.college is None %}
+         <ul>
+         {{ subject.name }}
+         <a href="{% url 'test_share:subject_detail' subject_pk=subject.pk %}">
+             過去問を閲覧する
+         </a>
+         </ul>
+    {% endif %}
+{% endfor %}
+</div>
+<div class="specialized">
+<h3>専門科目</h3>
+{% for subject in subjects %}
+    {% if subject.college is not None %}
+        <ul>
+            {{ subject.college }} {{ subject.school }}の{{ subject.name }}
+            <a href="{% url 'test_share:subject_detail' subject_pk=subject.pk %}">
+                過去問を閲覧する
+            </a>
+        </ul>
+    {% endif %}
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'test_share/base.html' %}
+
+{% block content %}
+
+<header>
+    <a href="{% url 'test_share:test_add' subject_pk=subject.pk %}">過去問・レポート課題・授業資料を投稿する</a>
+</header>
+
+{% if subject.college is not None %}
+<h3>専門科目</h3>
+<p>{{ subject.college }}  |  {{ subject.school }}</p>
+{% else %}
+<h3>一般教養科目</h3>
+{% endif %}
+<p>科目:{{ subject.name }}</p>
+<p>担当教官:{{ subject.professor }}</p>
+
+{% if test_images.count != 0 %}
+    {% for test_image in test_images %}
+        {{ test_image.title }} | {{ test_image.year }}
+        <br>
+        <img src="{{ test_image.image.url }}" class="test_image">
+        <br>
+        {{ test_image.comment }}
+        {{ test_image.like.num }}いいね
+        {% if request.user.is_authenticated %}
+            {% if request.user not in test_image.like.user.all %}
+                <form action="{% url 'test_share:push_like' subject_pk=test_image.subject.pk like_pk=test_image.like.pk do='like' %}" method="post">{% csrf_token %}
+                        <button type="submit" value="{{ test_add.pk }}"><i class="fas fa-lg fa-heart like-red">いいねする</i></button>
+                </form>
+            {% else %}
+                <form action="{% url 'test_share:push_like' subject_pk=test_image.subject.pk like_pk=test_image.like.pk do='unlike' %}" method="post">{% csrf_token %}
+                    <button type="submit" value="{{ test_add.pk }}"><i class="fas fa-lg fa-heart">いいねをやめる</i></button>
+                </form>
+            {% endif %}
+        {% endif %}
+        <br>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

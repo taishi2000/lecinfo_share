@@ -1,0 +1,15 @@
+{% extends 'test_share/base.html' %}
+
+{% block content %}
+
+<div>
+    <a href="{% url 'test_share:index' %}">ホームへ戻る</a>
+</div>
+
+<form action="{% url 'test_share:test_add' subject_pk=subject_pk%}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <button type="submit" class="btn">共有する</button>
+</form>
+{% endblock %}

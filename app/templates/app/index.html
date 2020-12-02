@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<div class="iberalarts">
+<h3>一般教養科目</h3>
+{% for subject in subjects %}
+　　 {% if subject.college is None %}
+         <ul>
+         {{ subject.name }}
+         ({{ subject.comment_set.all.count }}個のコメントが寄せられています。)
+         <a href="{% url 'app:subject_detail' subject_pk=subject.pk %}">
+             閲覧
+         </a>
+         </ul>
+    {% endif %}
+{% endfor %}
+</div>
+<div class="specialized">
+<h3>専門科目</h3>
+{% for subject in subjects %}
+    {% if subject.college is not None %}
+        <ul>
+            {{ subject.college }} {{ subject.school }}の{{ subject.name }}
+            ({{ subject.comment_set.all.count }}個のコメントが寄せられています。)
+            <a href="{% url 'app:subject_detail' subject_pk=subject.pk %}">
+                コメントを閲覧する
+            </a>
+        </ul>
+    {% endif %}
+{% endfor %}
+</div>
+{% endblock %}

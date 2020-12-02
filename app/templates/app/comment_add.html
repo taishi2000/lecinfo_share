@@ -1,0 +1,12 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div>
+    <a href="{% url 'app:index' %}">ホームに戻る</a>
+</div>
+<form action="{% url 'app:comment_add' subject_pk=subject.pk %}" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">投稿する</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+    <h1>コメント編集</h1>
+    <form action="{% url 'app:edit' comment_pk=comment.pk %}" method="post">{% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <button class="btn" type="submit">保存する</button>
+    </form>
+    <a href="{% url 'app:subject_detail' subject_pk=comment.subject.pk %}">
+        講義情報画面へ戻る
+    </a>
+{% endblock %}
